@@ -1,15 +1,31 @@
 package com.aryanbamba.vaultx.entity;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collation = "users")
+@Document(collection = "users")
 public class User {
+
     @Id
     private String id;
+
+    @NotBlank(message = "Name cannot be blank")
+    @Size(min = 3,max=50,message = "Name must be between 3 and 50 characters")
     private String name;
+
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Enter a valid email")
     private String email;
+
+    @NotBlank(message = "Password cannot be blank")
+    @Size(min = 8, message = "Password must contain at least 8 characters")
     private String password;
+
+    public User() {
+    }
 
     public User(String id, String name, String email, String password) {
         this.id = id;
