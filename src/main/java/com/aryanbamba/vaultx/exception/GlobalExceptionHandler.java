@@ -40,4 +40,17 @@ public class GlobalExceptionHandler {
 
         return response;
     }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseBody
+    public ErrorResponse handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
+
+        return new ErrorResponse(
+                409,
+                ex.getMessage(),
+                LocalDateTime.now(),
+                null
+        );
+    }
 }
