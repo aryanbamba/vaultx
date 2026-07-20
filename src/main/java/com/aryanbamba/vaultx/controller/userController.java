@@ -26,4 +26,6 @@ public class userController {
     public User createUser(@Valid @RequestBody User user){
         return userService.createUser(user);
     }
+
+
 }
