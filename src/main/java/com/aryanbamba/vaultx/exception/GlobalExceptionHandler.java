@@ -53,4 +53,17 @@ public class GlobalExceptionHandler {
                 null
         );
     }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public ErrorResponse handleInvalidCredentialsException(InvalidCredentialsException ex) {
+
+        return new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                ex.getMessage(),
+                LocalDateTime.now(),
+                null
+        );
+    }
 }
