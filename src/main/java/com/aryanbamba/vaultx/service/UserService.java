@@ -1,6 +1,7 @@
 package com.aryanbamba.vaultx.service;
 
 import com.aryanbamba.vaultx.dto.LoginRequest;
+import com.aryanbamba.vaultx.dto.UserResponse;
 import com.aryanbamba.vaultx.entity.User;
 import com.aryanbamba.vaultx.exception.InvalidCredentialsException;
 import com.aryanbamba.vaultx.repository.UserRepository;
@@ -62,14 +63,21 @@ public class UserService {
         return "Login Successful";
     }
 
-    public User getUserByEmail(String email) {
+    public UserResponse getUserByEmail(String email) {
 
         logger.info("Fetching user with email: {}", email);
+        logger.info("Fetching user with email: {}", email);
 
-        return userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> {
                     logger.warn("User not found with email: {}", email);
                     return new RuntimeException("User not found");
                 });
+
+        return new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail()
+        );
     }
 }

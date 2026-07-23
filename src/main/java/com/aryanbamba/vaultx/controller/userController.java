@@ -1,5 +1,6 @@
 package com.aryanbamba.vaultx.controller;
 
+import com.aryanbamba.vaultx.dto.UserResponse;
 import com.aryanbamba.vaultx.entity.User;
 import com.aryanbamba.vaultx.service.UserService;
 import jakarta.validation.Valid;
@@ -26,7 +27,7 @@ public class userController {
     }
 
     @GetMapping("/{email}")
-    public User getUserByEmail(@PathVariable String email) {
+    public UserResponse getUserByEmail(@PathVariable String email) {
         return userService.getUserByEmail(email);
     }
 }
