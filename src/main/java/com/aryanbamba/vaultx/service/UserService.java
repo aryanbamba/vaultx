@@ -11,6 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UserService {
 
@@ -39,6 +42,22 @@ public class UserService {
         logger.info("User created successfully with id: {}", savedUser.getId());
 
         return savedUser;
+    }
+
+    public List<User> createUsers(List<User> users) {
+
+        for (User user : users) {
+
+            if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+                throw new UserAlreadyExistsException(
+                        "Email already exists: " + user.getEmail()
+                );
+            }
+
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
+        return userRepository.saveAll(users);
     }
 
     public String login(LoginRequest loginRequest) {
@@ -79,5 +98,35 @@ public class UserService {
                 user.getName(),
                 user.getEmail()
         );
+    }
+
+    public List<UserResponse> getAllUsers() {
+
+        logger.info("Fetching all users");
+
+        List<User> users = userRepository.findAll();
+
+        return users.stream()
+                .map(user -> new UserResponse(
+                        user.getId(),
+                        user.getName(),
+                        user.getEmail()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public void deleteUserByEmail(String email) {
+
+        logger.info("Deleting user with email: {}", email);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> {
+                    logger.warn("User not found with email: {}", email);
+                    return new RuntimeException("User not found");
+                });
+
+        userRepository.delete(user);
+
+        logger.info("User deleted successfully: {}", email);
     }
 }
